@@ -1,4 +1,4 @@
-import 'package:adopt_pet_app/features/animals/components/animal_section.dart';
+import 'package:adopt_pet_app/features/home/components/animal_section.dart';
 import 'package:flutter/material.dart';
 
 class HomeAnimalsPage extends StatefulWidget {
