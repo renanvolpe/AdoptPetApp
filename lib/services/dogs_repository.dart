@@ -14,7 +14,10 @@ class DogsRepo implements DogsRepository {
 
     String endpointDogsList =
         Endpoints.baseUrl + Endpoints.v1 + Endpoints.dogList;
-    Map<String, dynamic> header = {"YOUR-API-KEY": Endpoints.apiKey};
+    Map<String, dynamic> header = {
+      "YOUR-API-KEY": Endpoints.apiKey,
+      "limit": 15,
+    };
     //Map<String, dynamic> params = {};
     try {
       Response response =
