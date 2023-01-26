@@ -19,6 +19,8 @@ class _DogListPageState extends State<DogListPage> {
 
   @override
   Widget build(BuildContext context) {
+    //se how much images are using at memory
+    //debugInvertOversizedImages = true;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Lista de cachorros para adoção"),
@@ -33,17 +35,62 @@ class _DogListPageState extends State<DogListPage> {
                     return Container(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 10),
-                      padding: const EdgeInsets.symmetric(vertical: 20),
                       decoration: BoxDecoration(
                           color: Colors.black12,
                           borderRadius: BorderRadius.circular(5),
                           border: Border.all(width: 1, color: Colors.black)),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            stateDogGet.listDogs[index].name,
-                            style: const TextStyle(color: Colors.black),
+                          Container(
+                              color: const Color.fromRGBO(255, 255, 255, 1),
+                              child: Image.network(
+                                stateDogGet.listDogs[index].image.url,
+                                fit: BoxFit.cover,
+
+                                cacheWidth: 100,
+                                cacheHeight: 80,
+
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  loadingProgress;
+                                  if (loadingProgress != null) {
+                                    return const SizedBox(
+                                      height: 80,
+                                      width: 100,
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    );
+                                  }
+                                  return child;
+                                },
+
+                                // height: 80,
+                                // width: 100,
+                              )),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                stateDogGet.listDogs[index].name,
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                child: Text(
+                                  stateDogGet.listDogs[index].temperament,
+                                  overflow: TextOverflow.fade,
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
