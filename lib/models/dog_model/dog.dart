@@ -2,8 +2,8 @@
 import 'dart:convert';
 
 import 'package:adopt_pet_app/models/Weight.dart';
-import 'package:adopt_pet_app/models/height.dart';
-import 'package:adopt_pet_app/models/image.dart';
+import 'package:adopt_pet_app/models/dog_model/height.dart';
+import 'package:adopt_pet_app/models/dog_model/image.dart';
 
 class Dog {
   Weight weight;

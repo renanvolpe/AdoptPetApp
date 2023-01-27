@@ -1,4 +1,4 @@
-import 'package:adopt_pet_app/models/dog.dart';
+import 'package:adopt_pet_app/models/dog_model/dog.dart';
 import 'package:adopt_pet_app/services/dogs_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';

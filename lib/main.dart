@@ -1,4 +1,5 @@
 import 'package:adopt_pet_app/core/routes.dart';
+import 'package:adopt_pet_app/features/cat/bloc/blocGetCats/cat_get_bloc.dart';
 import 'package:adopt_pet_app/features/dog/bloc/dog_get_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => DogGetBloc(),
+        ),
+        BlocProvider(
+          create: (context) => CatGetBloc(),
         ),
         
       ],

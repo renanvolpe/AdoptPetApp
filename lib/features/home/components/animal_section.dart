@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AnimalSection extends StatelessWidget {
-  const AnimalSection({Key? key, required this.image, required this.text})
+  const AnimalSection({Key? key, required this.image, required this.text, required this.nextPage})
       : super(key: key);
   final String text;
   final String image;
-
+  final String nextPage;
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push("/dogs");
+        context.push(nextPage);
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,

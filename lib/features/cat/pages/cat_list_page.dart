@@ -1,19 +1,19 @@
-import 'package:adopt_pet_app/features/dog/bloc/dog_get_bloc.dart';
+import 'package:adopt_pet_app/features/cat/bloc/blocGetCats/cat_get_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DogListPage extends StatefulWidget {
-  const DogListPage({Key? key}) : super(key: key);
+class CatListPage extends StatefulWidget {
+  const CatListPage({Key? key}) : super(key: key);
 
   @override
-  State<DogListPage> createState() => _DogListPageState();
+  State<CatListPage> createState() => _CatListPageState();
 }
 
-class _DogListPageState extends State<DogListPage> {
+class _CatListPageState extends State<CatListPage> {
   @override
   void initState() {
     //start call dog list here
-    BlocProvider.of<DogGetBloc>(context).add(DogGetListEvent());
+    BlocProvider.of<CatGetBloc>(context).add(CatGetListEvent());
     super.initState();
   }
 
@@ -25,12 +25,12 @@ class _DogListPageState extends State<DogListPage> {
       appBar: AppBar(
         title: const Text("Lista de cachorros para adoção"),
       ),
-      body: BlocBuilder<DogGetBloc, DogGetState>(
-        builder: (context, stateDogGet) {
-          if (stateDogGet is DogGetSuccessState) {
+      body: BlocBuilder<CatGetBloc, CatGetState>(
+        builder: (context, stateCatGet) {
+          if (stateCatGet is CatGetSuccessState) {
             return Container(
               child: ListView.builder(
-                  itemCount: stateDogGet.listDogs.length,
+                  itemCount: stateCatGet.listCats.length,
                   itemBuilder: (_, index) {
                     return Container(
                       margin: const EdgeInsets.symmetric(
@@ -47,30 +47,7 @@ class _DogListPageState extends State<DogListPage> {
                               width: 100,
                               height: 80,
                               color: const Color.fromRGBO(255, 255, 255, 1),
-                              child: Image.network(
-                                stateDogGet.listDogs[index].image.url,
-                                fit: BoxFit.cover,
-
-                                cacheWidth: 100,
-                                cacheHeight: 80,
-
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  loadingProgress;
-                                  if (loadingProgress != null) {
-                                    return const SizedBox(
-                                      height: 80,
-                                      width: 100,
-                                      child: Center(
-                                          child: CircularProgressIndicator()),
-                                    );
-                                  }
-                                  return child;
-                                },
-
-                                // height: 80,
-                                // width: 100,
-                              )),
+                              child: const GetImageCat()),
                           const SizedBox(
                             width: 20,
                           ),
@@ -78,7 +55,7 @@ class _DogListPageState extends State<DogListPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                stateDogGet.listDogs[index].name,
+                                stateCatGet.listCats[index].name,
                                 style: const TextStyle(color: Colors.black),
                               ),
                               const SizedBox(
@@ -87,7 +64,7 @@ class _DogListPageState extends State<DogListPage> {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.5,
                                 child: Text(
-                                  stateDogGet.listDogs[index].temperament,
+                                  stateCatGet.listCats[index].temperament,
                                   overflow: TextOverflow.fade,
                                   style: const TextStyle(color: Colors.black),
                                 ),
@@ -99,13 +76,48 @@ class _DogListPageState extends State<DogListPage> {
                     );
                   }),
             );
-          } else if (stateDogGet is DogGetProgressState) {
+          } else if (stateCatGet is CatGetProgressState) {
             return const Center(child: CircularProgressIndicator());
           } else {
             return const Text("Houve algum erro de execução");
           }
         },
       ),
+    );
+  }
+}
+
+class GetImageCat extends StatelessWidget {
+  const GetImageCat({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      "",
+      fit: BoxFit.cover,
+
+      cacheWidth: 100,
+      cacheHeight: 80,
+
+      loadingBuilder: (context, child, loadingProgress) {
+        loadingProgress;
+        if (loadingProgress != null) {
+          return const SizedBox(
+            height: 80,
+            width: 100,
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return child;
+      },
+      errorBuilder: (context, error, stackTrace) {
+        return const Center(child: Text("Sem imagem"));
+      },
+
+      // height: 80,
+      // width: 100,
     );
   }
 }

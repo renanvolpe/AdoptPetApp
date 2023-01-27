@@ -1,19 +1,20 @@
 import 'package:adopt_pet_app/core/endpoints.dart';
+import 'package:adopt_pet_app/models/cat_model/cat.dart';
 import 'package:adopt_pet_app/models/dog_model/dog.dart';
 import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
-abstract class DogsRepository {
-  Future<Result<List<Dog>, String>> getDogsList();
+abstract class CatsRepository {
+  Future<Result<List<Cat>, String>> getCatsList();
 }
 
-class DogsRepo implements DogsRepository {
+class CatsRepo implements CatsRepository {
   @override
-  Future<Result<List<Dog>, String>> getDogsList() async {
-    List<Dog> listDogs = [];
+  Future<Result<List<Cat>, String>> getCatsList() async {
+    List<Cat> listCats = [];
 
-    String endpointDogsList =
-        Endpoints.baseUrlDog + Endpoints.v1 + Endpoints.dogList;
+    String endpointCatsList =
+        Endpoints.baseUrlCat + Endpoints.v1 + Endpoints.dogList;
     Map<String, dynamic> header = {
       "YOUR-API-KEY": Endpoints.apiKey,
       "limit": 15,
@@ -21,15 +22,15 @@ class DogsRepo implements DogsRepository {
     //Map<String, dynamic> params = {};
     try {
       Response response =
-          await Dio().get(endpointDogsList, queryParameters: header);
+          await Dio().get(endpointCatsList, queryParameters: header);
 
       for (var dog in response.data) {
-        listDogs.add(Dog.fromMap(dog));
+        listCats.add(Cat.fromMap(dog));
       }
-      if (listDogs.isEmpty) {
+      if (listCats.isEmpty) {
         return const Failure("Não há dados a serem mostrados");
       }
-      return Success(listDogs);
+      return Success(listCats);
     } catch (e) {
       return Failure("$e");
     }

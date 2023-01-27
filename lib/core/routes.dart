@@ -1,3 +1,4 @@
+import 'package:adopt_pet_app/features/Cat/pages/cat_list_page.dart';
 import 'package:adopt_pet_app/features/dog/pages/dog_list_page.dart';
 import 'package:adopt_pet_app/features/home/pages/home_animals_page.dart';
 import 'package:adopt_pet_app/features/home/pages/home_page.dart';
@@ -18,6 +19,10 @@ final router = GoRouter(
     GoRoute(
       path: '/dogs',
       builder: (context, state) => const DogListPage(),
+    ),
+    GoRoute(
+      path: '/cats',
+      builder: (context, state) => const CatListPage(),
     ),
   ],
 );
