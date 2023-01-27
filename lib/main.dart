@@ -1,4 +1,5 @@
 import 'package:adopt_pet_app/core/routes.dart';
+import 'package:adopt_pet_app/features/cat/bloc/blocGetCatImage/cat_get_image_dart_bloc.dart';
 import 'package:adopt_pet_app/features/cat/bloc/blocGetCats/cat_get_bloc.dart';
 import 'package:adopt_pet_app/features/dog/bloc/dog_get_bloc.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => CatGetBloc(),
+        ),
+         BlocProvider(
+          create: (context) => CatGetImageBloc(),
         ),
         
       ],

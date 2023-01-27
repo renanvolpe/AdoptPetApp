@@ -1,3 +1,4 @@
+import 'package:adopt_pet_app/features/cat/bloc/blocGetCatImage/cat_get_image_dart_bloc.dart';
 import 'package:adopt_pet_app/features/cat/bloc/blocGetCats/cat_get_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,11 @@ class _CatListPageState extends State<CatListPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //se how much images are using at memory
     //debugInvertOversizedImages = true;
@@ -30,7 +36,7 @@ class _CatListPageState extends State<CatListPage> {
           if (stateCatGet is CatGetSuccessState) {
             return Container(
               child: ListView.builder(
-                  itemCount: stateCatGet.listCats.length,
+                  itemCount: 1,
                   itemBuilder: (_, index) {
                     return Container(
                       margin: const EdgeInsets.symmetric(
@@ -47,7 +53,10 @@ class _CatListPageState extends State<CatListPage> {
                               width: 100,
                               height: 80,
                               color: const Color.fromRGBO(255, 255, 255, 1),
-                              child: const GetImageCat()),
+                              child: GetImageCat(
+                                referenceUrl: stateCatGet
+                                    .listCats[index].reference_image_id,
+                              )),
                           const SizedBox(
                             width: 20,
                           ),
@@ -87,37 +96,46 @@ class _CatListPageState extends State<CatListPage> {
   }
 }
 
-class GetImageCat extends StatelessWidget {
-  const GetImageCat({
-    Key? key,
-  }) : super(key: key);
+class GetImageCat extends StatefulWidget {
+  const GetImageCat({Key? key, required this.referenceUrl}) : super(key: key);
+  final String referenceUrl;
+  @override
+  State<GetImageCat> createState() => _GetImageCatState();
+}
+
+class _GetImageCatState extends State<GetImageCat> {
+  @override
+  void initState() {
+    BlocProvider.of<CatGetImageBloc>(context)
+        .add(CatGetImageEvent(widget.referenceUrl));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      "",
-      fit: BoxFit.cover,
+    return BlocBuilder<CatGetImageBloc, CatGetImageState>(
+        builder: ((context, state) {
+      if (state is CatGetImageSuccessState) {
+        return Image.network(
+          state.urlImage,
+          fit: BoxFit.cover,
+          cacheWidth: 100,
+          cacheHeight: 80,
+          loadingBuilder: (context, child, loadingProgress) {
+            loadingProgress;
+            if (loadingProgress != null) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return child;
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return const Center(
+                child: Text("Sem imagem")); //TODO change to imagem
+          },
+        );
+      }
 
-      cacheWidth: 100,
-      cacheHeight: 80,
-
-      loadingBuilder: (context, child, loadingProgress) {
-        loadingProgress;
-        if (loadingProgress != null) {
-          return const SizedBox(
-            height: 80,
-            width: 100,
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
-        return child;
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return const Center(child: Text("Sem imagem"));
-      },
-
-      // height: 80,
-      // width: 100,
-    );
+      return Container();
+    }));
   }
 }
