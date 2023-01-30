@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 part 'cat_get_image_dart_event.dart';
 part 'cat_get_image_dart_state.dart';
 
+//this bloc image is optional, just to study blocProvider separetaded from main
 class CatGetImageBloc extends Bloc<CatGetImageEvent, CatGetImageState> {
   late CatsRepo apiCat;
   CatGetImageBloc() : super(CatGetImageInitial()) {

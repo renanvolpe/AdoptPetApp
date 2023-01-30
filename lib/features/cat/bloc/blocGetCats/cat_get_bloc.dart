@@ -17,7 +17,7 @@ class CatGetBloc extends Bloc<CatGetEvent, CatGetState> {
       CatGetListEvent event, Emitter<CatGetState> emit) async {
     emit(CatGetProgressState());
     apiCat = CatsRepo();
-    var result = await apiCat.getCatsList();
+    var result = await apiCat.getCatsList( event.page ?? 0  , event.order ?? "ASC");
     result.fold(
         (success) => emit(CatGetSuccessState(success)),
         (failure) => emit(CatGetFailureState())

@@ -10,14 +10,16 @@ abstract class CatsRepository {
 
 class CatsRepo implements CatsRepository {
   @override
-  Future<Result<List<Cat>, String>> getCatsList() async {
+  Future<Result<List<Cat>, String>> getCatsList([int page = 0, String order = "ASC"]) async {
     List<Cat> listCats = [];
 
     String endpointCatsList =
         Endpoints.baseUrlCat + Endpoints.v1 + Endpoints.dogList;
     Map<String, dynamic> header = {
+      "page" : page,
+      "order": order, 
       "YOUR-API-KEY": Endpoints.apiKey,
-      "limit": 10,
+      "limit": 12,
     };
     //Map<String, dynamic> params = {};
     try {
