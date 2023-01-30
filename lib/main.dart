@@ -1,3 +1,4 @@
+import 'package:adopt_pet_app/core/bloc_observer.dart';
 import 'package:adopt_pet_app/core/routes.dart';
 import 'package:adopt_pet_app/features/cat/bloc/blocGetCatImage/cat_get_image_dart_bloc.dart';
 import 'package:adopt_pet_app/features/cat/bloc/blocGetCats/cat_get_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
+  Bloc.observer = SimpleBlocObserver();
   runApp(const MyApp());
 }
 

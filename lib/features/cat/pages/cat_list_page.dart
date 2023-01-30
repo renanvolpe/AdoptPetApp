@@ -58,9 +58,10 @@ class _CatListPageState extends State<CatListPage> {
                                 width: 100,
                                 height: 80,
                                 color: const Color.fromRGBO(255, 255, 255, 1),
-                                //put bloc provider here to close after conclude execution
+                                
                                 child:
                                 GetImageCat(referenceImage: stateCatGet.listCats[index].reference_image_id,)
+                                //put bloc provider here to close calls after conclude execution
                                 //  BlocProvider(
                                 //   create: (context) => CatGetImageBloc(),
                                 //   child: GetImageStudyCat(
