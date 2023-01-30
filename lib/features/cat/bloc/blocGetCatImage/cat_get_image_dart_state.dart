@@ -19,4 +19,6 @@ class CatGetImageSuccessState extends CatGetImageState {
   List<Object> get props => [urlImage];
 }
 
-class CatGetImageFailureState extends CatGetImageState {}
+class CatGetImageFailureState extends CatGetImageState {
+  String failureImage = "";
+}

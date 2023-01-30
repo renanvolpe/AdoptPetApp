@@ -43,6 +43,7 @@ class Cat {
   String wikipedia_url;
   int hypoallergenic;
   String reference_image_id;
+  String? urlImage;
   Cat({
     required this.weight,
     required this.id,
@@ -81,8 +82,8 @@ class Cat {
     required this.wikipedia_url,
     required this.hypoallergenic,
     required this.reference_image_id,
+    this.urlImage
   });
-  
 
   Cat copyWith({
     Weight? weight,
@@ -208,7 +209,7 @@ class Cat {
 
   factory Cat.fromMap(Map<String, dynamic> map) {
     return Cat(
-      weight: Weight.fromMap(map['weight'] as Map<String,dynamic>),
+      weight: Weight.fromMap(map['weight'] as Map<String, dynamic>),
       id: map['id'] as String,
       name: map['name'] as String,
       cfa_url: map['cfa_url'] as String,
@@ -250,7 +251,8 @@ class Cat {
 
   String toJson() => json.encode(toMap());
 
-  factory Cat.fromJson(String source) => Cat.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Cat.fromJson(String source) =>
+      Cat.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -260,85 +262,84 @@ class Cat {
   @override
   bool operator ==(covariant Cat other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.weight == weight &&
-      other.id == id &&
-      other.name == name &&
-      other.cfa_url == cfa_url &&
-      other.vetstreet_url == vetstreet_url &&
-      other.vcahospitals_url == vcahospitals_url &&
-      other.temperament == temperament &&
-      other.origin == origin &&
-      other.country_codes == country_codes &&
-      other.country_code == country_code &&
-      other.description == description &&
-      other.life_span == life_span &&
-      other.indoor == indoor &&
-      other.lap == lap &&
-      other.alt_names == alt_names &&
-      other.adaptability == adaptability &&
-      other.affection_level == affection_level &&
-      other.child_friendly == child_friendly &&
-      other.dog_friendly == dog_friendly &&
-      other.energy_level == energy_level &&
-      other.grooming == grooming &&
-      other.health_issues == health_issues &&
-      other.intelligence == intelligence &&
-      other.shedding_level == shedding_level &&
-      other.social_needs == social_needs &&
-      other.stranger_friendly == stranger_friendly &&
-      other.vocalisation == vocalisation &&
-      other.experimental == experimental &&
-      other.hairless == hairless &&
-      other.natural == natural &&
-      other.rare == rare &&
-      other.rex == rex &&
-      other.suppressed_tail == suppressed_tail &&
-      other.short_legs == short_legs &&
-      other.wikipedia_url == wikipedia_url &&
-      other.hypoallergenic == hypoallergenic &&
-      other.reference_image_id == reference_image_id;
+
+    return other.weight == weight &&
+        other.id == id &&
+        other.name == name &&
+        other.cfa_url == cfa_url &&
+        other.vetstreet_url == vetstreet_url &&
+        other.vcahospitals_url == vcahospitals_url &&
+        other.temperament == temperament &&
+        other.origin == origin &&
+        other.country_codes == country_codes &&
+        other.country_code == country_code &&
+        other.description == description &&
+        other.life_span == life_span &&
+        other.indoor == indoor &&
+        other.lap == lap &&
+        other.alt_names == alt_names &&
+        other.adaptability == adaptability &&
+        other.affection_level == affection_level &&
+        other.child_friendly == child_friendly &&
+        other.dog_friendly == dog_friendly &&
+        other.energy_level == energy_level &&
+        other.grooming == grooming &&
+        other.health_issues == health_issues &&
+        other.intelligence == intelligence &&
+        other.shedding_level == shedding_level &&
+        other.social_needs == social_needs &&
+        other.stranger_friendly == stranger_friendly &&
+        other.vocalisation == vocalisation &&
+        other.experimental == experimental &&
+        other.hairless == hairless &&
+        other.natural == natural &&
+        other.rare == rare &&
+        other.rex == rex &&
+        other.suppressed_tail == suppressed_tail &&
+        other.short_legs == short_legs &&
+        other.wikipedia_url == wikipedia_url &&
+        other.hypoallergenic == hypoallergenic &&
+        other.reference_image_id == reference_image_id;
   }
 
   @override
   int get hashCode {
     return weight.hashCode ^
-      id.hashCode ^
-      name.hashCode ^
-      cfa_url.hashCode ^
-      vetstreet_url.hashCode ^
-      vcahospitals_url.hashCode ^
-      temperament.hashCode ^
-      origin.hashCode ^
-      country_codes.hashCode ^
-      country_code.hashCode ^
-      description.hashCode ^
-      life_span.hashCode ^
-      indoor.hashCode ^
-      lap.hashCode ^
-      alt_names.hashCode ^
-      adaptability.hashCode ^
-      affection_level.hashCode ^
-      child_friendly.hashCode ^
-      dog_friendly.hashCode ^
-      energy_level.hashCode ^
-      grooming.hashCode ^
-      health_issues.hashCode ^
-      intelligence.hashCode ^
-      shedding_level.hashCode ^
-      social_needs.hashCode ^
-      stranger_friendly.hashCode ^
-      vocalisation.hashCode ^
-      experimental.hashCode ^
-      hairless.hashCode ^
-      natural.hashCode ^
-      rare.hashCode ^
-      rex.hashCode ^
-      suppressed_tail.hashCode ^
-      short_legs.hashCode ^
-      wikipedia_url.hashCode ^
-      hypoallergenic.hashCode ^
-      reference_image_id.hashCode;
+        id.hashCode ^
+        name.hashCode ^
+        cfa_url.hashCode ^
+        vetstreet_url.hashCode ^
+        vcahospitals_url.hashCode ^
+        temperament.hashCode ^
+        origin.hashCode ^
+        country_codes.hashCode ^
+        country_code.hashCode ^
+        description.hashCode ^
+        life_span.hashCode ^
+        indoor.hashCode ^
+        lap.hashCode ^
+        alt_names.hashCode ^
+        adaptability.hashCode ^
+        affection_level.hashCode ^
+        child_friendly.hashCode ^
+        dog_friendly.hashCode ^
+        energy_level.hashCode ^
+        grooming.hashCode ^
+        health_issues.hashCode ^
+        intelligence.hashCode ^
+        shedding_level.hashCode ^
+        social_needs.hashCode ^
+        stranger_friendly.hashCode ^
+        vocalisation.hashCode ^
+        experimental.hashCode ^
+        hairless.hashCode ^
+        natural.hashCode ^
+        rare.hashCode ^
+        rex.hashCode ^
+        suppressed_tail.hashCode ^
+        short_legs.hashCode ^
+        wikipedia_url.hashCode ^
+        hypoallergenic.hashCode ^
+        reference_image_id.hashCode;
   }
 }

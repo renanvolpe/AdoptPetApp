@@ -23,9 +23,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => CatGetBloc(),
         ),
-         BlocProvider(
-          create: (context) => CatGetImageBloc(),
-        ),
+        //  BlocProvider(
+        //   create: (context) => CatGetImageBloc(),
+        // ),
         
       ],
       child: MaterialApp.router(

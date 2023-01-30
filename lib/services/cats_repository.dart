@@ -17,7 +17,7 @@ class CatsRepo implements CatsRepository {
         Endpoints.baseUrlCat + Endpoints.v1 + Endpoints.dogList;
     Map<String, dynamic> header = {
       "YOUR-API-KEY": Endpoints.apiKey,
-      "limit": 15,
+      "limit": 10,
     };
     //Map<String, dynamic> params = {};
     try {

@@ -19,4 +19,6 @@ class CatGetSuccessState extends CatGetState {
   List<Object> get props => [listCats];
 }
 
+
+
 class CatGetFailureState extends CatGetState {}
