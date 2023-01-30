@@ -1,4 +1,4 @@
-import 'package:adopt_pet_app/features/animals/components/animal_section.dart';
+import 'package:adopt_pet_app/features/home/components/animal_section.dart';
 import 'package:flutter/material.dart';
 
 class HomeAnimalsPage extends StatefulWidget {
@@ -36,6 +36,7 @@ class _HomeAnimalsPageState extends State<HomeAnimalsPage> {
                 const AnimalSection(
                   image: "assets/images/dog_option.png",
                   text: "Adote um cachorro",
+                  nextPage: "/dogs",
                 ),
                 const SizedBox(
                   height: 20,
@@ -43,6 +44,7 @@ class _HomeAnimalsPageState extends State<HomeAnimalsPage> {
                 const AnimalSection(
                   image: "assets/images/cat_option.png",
                   text: "Adote um gato",
+                  nextPage: "/cats",
                 ),
                 const SizedBox(
                   height: 20,
@@ -50,6 +52,7 @@ class _HomeAnimalsPageState extends State<HomeAnimalsPage> {
                 const AnimalSection(
                   image: "assets/images/dog_cat_option.png",
                   text: "Adote um cachorro ou gato",
+                  nextPage: "/dogs",
                 ),
                 Row()
               ],
