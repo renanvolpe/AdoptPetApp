@@ -1,7 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:adopt_pet_app/features/cat/bloc/blocGetCatImage/cat_get_image_dart_bloc.dart';
-import 'package:adopt_pet_app/features/cat/components/cat_image_component.dart';
-import 'package:adopt_pet_app/features/cat/components/cat_image_study_component.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first, invalid_use_of_protected_member
+import 'package:adopt_pet_app/features/cat/components/cat_show_component.dart';
+import 'package:adopt_pet_app/models/cat_model/cat.dart';
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,16 +15,62 @@ class CatListPage extends StatefulWidget {
 }
 
 class _CatListPageState extends State<CatListPage> {
+  //to recieve from formfield
+  final _scrollController = ScrollController();
+  bool scrollDisposed = false;
+
+  //to make pagination
+  int numberPage = 0;
+  String order = "ASC";
+
+  //to show the list of cat
+  List<Cat> listCats = [];
+  bool isLoaded = false;
+
   @override
   void initState() {
     //start call dog list here
-    BlocProvider.of<CatGetBloc>(context).add(CatGetListEvent());
+    //numberPage and ASC is for pagination
+
+    BlocProvider.of<CatGetBloc>(context)
+        .add(CatGetListEvent(numberPage, order));
+    _scrollController.addListener(_onScroll);
+    print("ScrollController was created");
     super.initState();
   }
 
   @override
-  void dispose() {
-    super.dispose();
+  void deactivate() {
+    //reinitialize cat bloc state
+    BlocProvider.of<CatGetBloc>(context).add(CatResetInicialStateEvent());
+
+    //verify if scroll was disposed
+    if (!scrollDisposed) {
+      _scrollController
+        ..removeListener(_onScroll)
+        ..dispose();
+
+      print("ScrollController was disposed because of return page");
+    }
+    super.deactivate();
+  }
+
+  //function to call api if scroll to max on the screen
+  void _onScroll() {
+    if (_isBottom) {
+      setState(() {
+        numberPage++;
+      });
+      context.read<CatGetBloc>().add(CatGetListEvent(numberPage, order));
+    }
+  }
+
+  // verify if  scroll to max on the screen
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll);
   }
 
   @override
@@ -33,81 +79,51 @@ class _CatListPageState extends State<CatListPage> {
     //debugInvertOversizedImages = true;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Lista de cachorros para adoção"),
+        title: const Text("Lista de gatos para adoção"),
       ),
       body: BlocBuilder<CatGetBloc, CatGetState>(
         builder: (context, stateCatGet) {
           if (stateCatGet is CatGetSuccessState) {
-            return Container(
-              child: ListView.builder(
-                  itemCount: stateCatGet.listCats.length,
-                  itemBuilder: (_, index) {
-                    return Center(
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                            color: Colors.black12,
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(width: 1, color: Colors.black)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                width: 100,
-                                height: 80,
-                                color: const Color.fromRGBO(255, 255, 255, 1),
-                                
-                                child:
-                                GetImageCat(referenceImage: stateCatGet.listCats[index].reference_image_id,)
-                                //put bloc provider here to close calls after conclude execution
-                                //  BlocProvider(
-                                //   create: (context) => CatGetImageBloc(),
-                                //   child: GetImageStudyCat(
-                                //     cat: stateCatGet.listCats[index],
-                                //     functionList: (catImageURL) {
-                                //       stateCatGet.listCats[index].urlImage =
-                                //           catImageURL;
-                                //     },
-                                //   ),
-                                // )
-                                ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  stateCatGet.listCats[index].name,
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  child: Text(
-                                    stateCatGet.listCats[index].temperament,
-                                    overflow: TextOverflow.fade,
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-            );
+            isLoaded = true;
+            //when called api and there s nothing to show more
+            //dispose scroll listener and stop to call api
+            if (stateCatGet.listCats.isEmpty) {
+              _scrollController
+                ..removeListener(_onScroll)
+                ..dispose();
+              scrollDisposed = true;
+
+              print("ScrollController was disposed because scroll to max");
+            } else {
+              listCats.addAll(stateCatGet.listCats);
+            }
           } else if (stateCatGet is CatGetProgressState) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return const Text("Houve algum erro de execução");
+            if (isLoaded == false) {
+              return const Center(child: CircularProgressIndicator());
+            }
           }
+          return Column(
+            children: [
+              Flexible(
+                child: ListView.builder(
+                    controller: _scrollController,
+                    physics: const ScrollPhysics(),
+                    itemCount: listCats.length + 1,
+                    shrinkWrap: true,
+                    itemBuilder: (_, index) {
+                      return Column(
+                        children: [
+                          index >= listCats.length
+                              ? scrollDisposed
+                                  ? Container()
+                                  : const CircularProgressIndicator()
+                              : CatShowComponent(listCats: listCats[index]),
+                        ],
+                      );
+                    }),
+              ),
+            ],
+          );
         },
       ),
     );
