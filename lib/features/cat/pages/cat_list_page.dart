@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, invalid_use_of_protected_member
-import 'package:adopt_pet_app/features/cat/components/cat_image_component.dart';
+import 'package:adopt_pet_app/features/cat/components/cat_show_component.dart';
 import 'package:adopt_pet_app/models/cat_model/cat.dart';
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,25 +41,21 @@ class _CatListPageState extends State<CatListPage> {
 
   @override
   void deactivate() {
-    //reinitialize cat state
+    //reinitialize cat bloc state
     BlocProvider.of<CatGetBloc>(context).add(CatResetInicialStateEvent());
-    super.deactivate();
-  }
 
-  @override
-  void dispose() {
     //verify if scroll was disposed
-    if (_scrollController.hasClients == true) {
+    if (!scrollDisposed) {
       _scrollController
         ..removeListener(_onScroll)
         ..dispose();
+
       print("ScrollController was disposed because of return page");
     }
-
-    //evento to get cat initstate
-    super.dispose();
+    super.deactivate();
   }
 
+  //function to call api if scroll to max on the screen
   void _onScroll() {
     if (_isBottom) {
       setState(() {
@@ -68,6 +65,7 @@ class _CatListPageState extends State<CatListPage> {
     }
   }
 
+  // verify if  scroll to max on the screen
   bool get _isBottom {
     if (!_scrollController.hasClients) return false;
     final maxScroll = _scrollController.position.maxScrollExtent;
@@ -94,6 +92,7 @@ class _CatListPageState extends State<CatListPage> {
                 ..removeListener(_onScroll)
                 ..dispose();
               scrollDisposed = true;
+
               print("ScrollController was disposed because scroll to max");
             } else {
               listCats.addAll(stateCatGet.listCats);
@@ -118,77 +117,11 @@ class _CatListPageState extends State<CatListPage> {
                               ? scrollDisposed
                                   ? Container()
                                   : const CircularProgressIndicator()
-                              : Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 10),
-                                  decoration: BoxDecoration(
-                                      color: Colors.black12,
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          width: 1, color: Colors.black)),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                          width: 100,
-                                          height: 80,
-                                          color: const Color.fromRGBO(
-                                              255, 255, 255, 1),
-                                          child: GetImageCat(
-                                            referenceImage: listCats[index]
-                                                .reference_image_id,
-                                          )
-                                          //put bloc provider here to close calls after conclude execution
-                                          //  BlocProvider(
-                                          //   create: (context) => CatGetImageBloc(),
-                                          //   child: GetImageStudyCat(
-                                          //     cat: stateCatGet.listCats[index],
-                                          //     functionList: (catImageURL) {
-                                          //       stateCatGet.listCats[index].urlImage =
-                                          //           catImageURL;
-                                          //     },
-                                          //   ),
-                                          // )
-                                          ),
-                                      const SizedBox(
-                                        width: 20,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            listCats[index].name,
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.5,
-                                            child: Text(
-                                              listCats[index].temperament,
-                                              overflow: TextOverflow.fade,
-                                              style: const TextStyle(
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              : CatShowComponent(listCats: listCats[index]),
                         ],
                       );
                     }),
               ),
-
             ],
           );
         },
