@@ -16,6 +16,7 @@ class CatListPage extends StatefulWidget {
 class _CatListPageState extends State<CatListPage> {
   //to recieve from formfield
   final _scrollController = ScrollController();
+  bool scrollDisposed = false;
 
   //to make pagination
   int numberPage = 0;
@@ -92,6 +93,7 @@ class _CatListPageState extends State<CatListPage> {
               _scrollController
                 ..removeListener(_onScroll)
                 ..dispose();
+              scrollDisposed = true;
               print("ScrollController was disposed because scroll to max");
             } else {
               listCats.addAll(stateCatGet.listCats);
@@ -107,76 +109,86 @@ class _CatListPageState extends State<CatListPage> {
                 child: ListView.builder(
                     controller: _scrollController,
                     physics: const ScrollPhysics(),
-                    itemCount: listCats.length,
+                    itemCount: listCats.length + 1,
                     shrinkWrap: true,
                     itemBuilder: (_, index) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                            color: Colors.black12,
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(width: 1, color: Colors.black)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                width: 100,
-                                height: 80,
-                                color: const Color.fromRGBO(255, 255, 255, 1),
-                                child: GetImageCat(
-                                  referenceImage:
-                                      listCats[index].reference_image_id,
-                                )
-                                //put bloc provider here to close calls after conclude execution
-                                //  BlocProvider(
-                                //   create: (context) => CatGetImageBloc(),
-                                //   child: GetImageStudyCat(
-                                //     cat: stateCatGet.listCats[index],
-                                //     functionList: (catImageURL) {
-                                //       stateCatGet.listCats[index].urlImage =
-                                //           catImageURL;
-                                //     },
-                                //   ),
-                                // )
-                                ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  listCats[index].name,
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  child: Text(
-                                    listCats[index].temperament,
-                                    overflow: TextOverflow.fade,
-                                    style: const TextStyle(color: Colors.black),
+                      return Column(
+                        children: [
+                          index >= listCats.length
+                              ? scrollDisposed
+                                  ? Container()
+                                  : const CircularProgressIndicator()
+                              : Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  decoration: BoxDecoration(
+                                      color: Colors.black12,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                          width: 1, color: Colors.black)),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                          width: 100,
+                                          height: 80,
+                                          color: const Color.fromRGBO(
+                                              255, 255, 255, 1),
+                                          child: GetImageCat(
+                                            referenceImage: listCats[index]
+                                                .reference_image_id,
+                                          )
+                                          //put bloc provider here to close calls after conclude execution
+                                          //  BlocProvider(
+                                          //   create: (context) => CatGetImageBloc(),
+                                          //   child: GetImageStudyCat(
+                                          //     cat: stateCatGet.listCats[index],
+                                          //     functionList: (catImageURL) {
+                                          //       stateCatGet.listCats[index].urlImage =
+                                          //           catImageURL;
+                                          //     },
+                                          //   ),
+                                          // )
+                                          ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            listCats[index].name,
+                                            style: const TextStyle(
+                                                color: Colors.black),
+                                          ),
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            child: Text(
+                                              listCats[index].temperament,
+                                              overflow: TextOverflow.fade,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ],
-                        ),
+                        ],
                       );
                     }),
               ),
-              
-              //this part is to show progress indicator back of the page
-              isLoaded
-                  ? stateCatGet is CatGetProgressState
-                      ? const Center(child: CircularProgressIndicator())
-                      : Container()
-                  : Container()
+
             ],
           );
         },
