@@ -14,3 +14,5 @@ class CatGetListEvent extends CatGetEvent {
   @override
   List<Object> get props => [];
 }
+
+class CatResetInicialStateEvent extends CatGetEvent{}

@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, invalid_use_of_protected_member
 import 'package:adopt_pet_app/features/cat/components/cat_image_component.dart';
 import 'package:adopt_pet_app/models/cat_model/cat.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +14,14 @@ class CatListPage extends StatefulWidget {
 }
 
 class _CatListPageState extends State<CatListPage> {
+  //to recieve from formfield
   final _scrollController = ScrollController();
+
+  //to make pagination
   int numberPage = 0;
   String order = "ASC";
+
+  //to show the list of cat
   List<Cat> listCats = [];
   bool isLoaded = false;
 
@@ -24,10 +29,33 @@ class _CatListPageState extends State<CatListPage> {
   void initState() {
     //start call dog list here
     //numberPage and ASC is for pagination
+
     BlocProvider.of<CatGetBloc>(context)
         .add(CatGetListEvent(numberPage, order));
     _scrollController.addListener(_onScroll);
+    print("ScrollController was created");
     super.initState();
+  }
+
+  @override
+  void deactivate() {
+    //reinitialize cat state
+    BlocProvider.of<CatGetBloc>(context).add(CatResetInicialStateEvent());
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    //verify if scroll was disposed
+    if (_scrollController.hasClients == true) {
+      _scrollController
+        ..removeListener(_onScroll)
+        ..dispose();
+      print("ScrollController was disposed because of return page");
+    }
+
+    //evento to get cat initstate
+    super.dispose();
   }
 
   void _onScroll() {
@@ -43,12 +71,7 @@ class _CatListPageState extends State<CatListPage> {
     if (!_scrollController.hasClients) return false;
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    return currentScroll >= (maxScroll);
   }
 
   @override
@@ -57,13 +80,22 @@ class _CatListPageState extends State<CatListPage> {
     //debugInvertOversizedImages = true;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Lista de cachorros para adoção"),
+        title: const Text("Lista de gatos para adoção"),
       ),
       body: BlocBuilder<CatGetBloc, CatGetState>(
         builder: (context, stateCatGet) {
           if (stateCatGet is CatGetSuccessState) {
             isLoaded = true;
-            listCats.addAll(stateCatGet.listCats);
+            //when called api and there s nothing to show more
+            //dispose scroll listener and stop to call api
+            if (stateCatGet.listCats.isEmpty) {
+              _scrollController
+                ..removeListener(_onScroll)
+                ..dispose();
+              print("ScrollController was disposed because scroll to max");
+            } else {
+              listCats.addAll(stateCatGet.listCats);
+            }
           } else if (stateCatGet is CatGetProgressState) {
             if (isLoaded == false) {
               return const Center(child: CircularProgressIndicator());
@@ -73,6 +105,7 @@ class _CatListPageState extends State<CatListPage> {
             children: [
               Flexible(
                 child: ListView.builder(
+                    controller: _scrollController,
                     physics: const ScrollPhysics(),
                     itemCount: listCats.length,
                     shrinkWrap: true,
@@ -137,6 +170,8 @@ class _CatListPageState extends State<CatListPage> {
                       );
                     }),
               ),
+              
+              //this part is to show progress indicator back of the page
               isLoaded
                   ? stateCatGet is CatGetProgressState
                       ? const Center(child: CircularProgressIndicator())
