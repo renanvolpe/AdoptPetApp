@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,15 +15,64 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
           title: const Text("Adote um pet"),
         ),
-        body: Center(
-          child: Container(
-            child: TextButton(
-              onPressed: () {
-                context.push("/animals");
-              },
-              child: const Text("Vamos adotar"),
+        body: Column(
+          children: [
+            Center(
+              child: Container(
+                child: Image.network('https://logospng.org/wp-content/uploads/nike.jpg'),
+              ),
             ),
-          ),
-        ));
+            Container(
+              width: 200,
+                height: 120,
+              color: Colors.red,
+              child: Column(
+                children: const [
+                  TextField(  
+                      //controller: passwordController,  
+                      obscureText: true,  
+                      decoration: InputDecoration(  
+                        border: OutlineInputBorder(),  
+                        labelText: 'Password',
+                        labelStyle: TextStyle(
+                          color: Colors.black,
+                        ),  
+                        hintText: 'Enter Password',  
+                      ),  
+                    ),
+                    SizedBox(height: 20,),
+                    TextField(  
+                      //controller: passwordController,  
+                      obscureText: true,  
+                      decoration: InputDecoration(  
+                        border: OutlineInputBorder(),  
+                        labelText: 'Password',
+                        labelStyle: TextStyle(
+                          color: Colors.black,
+                        ),  
+                        hintText: 'Enter Password',  
+                      ),  
+                    ),
+                ],
+              ),
+            ),
+            TextButton(onPressed: (){},
+             child:
+             const Text('LOGIN',
+             style: TextStyle(
+              color: Colors.orange,
+             )),
+             ),
+             TextButton(onPressed: (){},
+             child:
+             const Text('Esqueci minha senha',
+             style: TextStyle(
+              color: Colors.black,
+             ),),
+             ),
+             const Text('aplicativo criado pelos ALEXANDRO'),
+          ],
+        )
+        );
   }
 }
